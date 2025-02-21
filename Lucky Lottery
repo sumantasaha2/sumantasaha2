@@ -1,0 +1,57 @@
+python
+
+import random
+from datetime import datetime
+
+# Lucky number pools based on astrology & numerology
+lucky_numbers = [2, 3, 6, 7, 9, 12, 15, 21, 24, 27, 30, 33, 36, 39, 42, 44, 45]
+lucky_star_numbers = [3, 6, 9, 12]  # EuroMillions Lucky Stars
+set_for_life_numbers = list(range(1, 48))  # Set for Life main numbers (1-47)
+set_for_life_lucky_ball = list(range(1, 11))  # Lucky Ball (1-10)
+
+# Lucky dates & astrology-based days
+lucky_dates = {
+    "April 30": [6, 12, 21, 33, 42],
+    "May 10": [2, 7, 12, 24, 33, 42],
+    "July 24": [7, 15, 27, 36, 44],
+    "September 6": [4, 9, 14, 27, 39, 44],
+}
+
+def generate_lottery_numbers(game="euromillions", date=None):
+    if date:
+        date_str = datetime.strptime(date, "%Y-%m-%d").strftime("%B %d")
+        if date_str in lucky_dates:
+            main_numbers = lucky_dates[date_str]
+        else:
+            main_numbers = sorted(random.sample(lucky_numbers, 5 if game == "euromillions" else 6))
+    else:
+        main_numbers = sorted(random.sample(lucky_numbers, 5 if game == "euromillions" else 6))
+
+    if game.lower() == "euromillions":
+        lucky_stars = sorted(random.sample(lucky_star_numbers, 2))
+        return {"Main Numbers": main_numbers, "Lucky Stars": lucky_stars}
+   
+    elif game.lower() == "lotto":
+        return {"Main Numbers": main_numbers}
+   
+    elif game.lower() == "set_for_life":
+        main_numbers = sorted(random.sample(set_for_life_numbers, 5))
+        lucky_ball = random.choice(set_for_life_lucky_ball)
+        return {"Main Numbers": main_numbers, "Lucky Ball": lucky_ball}
+   
+    else:
+        return "Invalid game selection"
+
+user_date = input("Enter a date (YYYY-MM-DD) or press Enter to skip: ")
+if user_date:
+    euromillions_numbers = generate_lottery_numbers("euromillions", user_date)
+    lotto_numbers = generate_lottery_numbers("lotto", user_date)
+    set_for_life_numbers = generate_lottery_numbers("set_for_life", user_date)
+else:
+    euromillions_numbers = generate_lottery_numbers("euromillions")
+    lotto_numbers = generate_lottery_numbers("lotto")
+    set_for_life_numbers = generate_lottery_numbers("set_for_life")
+
+print("\nEuroMillions Lucky Numbers:", euromillions_numbers)
+print("Lotto UK Lucky Numbers:", lotto_numbers)
+print("Set for Life Lucky Numbers:", set_for_life_numbers)
